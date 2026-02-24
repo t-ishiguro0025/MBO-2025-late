@@ -1,0 +1,258 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyLog デザインプレビュー</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0f0f11; font-family: "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif; color: #f0f0f5; }
+    .nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; background: rgba(15,15,17,0.93); border: 1px solid #2a2a35; border-radius: 40px; padding: 8px 12px; display: flex; gap: 4px; backdrop-filter: blur(12px); }
+    .nav button { background: none; border: none; color: #8888a0; border-radius: 30px; padding: 6px 14px; font-size: 12px; cursor: pointer; white-space: nowrap; font-family: inherit; transition: all 0.15s; }
+    .nav button.active { background: #f59e0b; color: #000; font-weight: 700; }
+    .screen { display: none; min-height: 100vh; } .screen.active { display: block; }
+    header { border-bottom: 1px solid #2a2a35; padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo-icon { width: 28px; height: 28px; background: #f59e0b; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+    .logo-text { font-weight: 800; font-size: 16px; }
+    .badge { display: inline-flex; align-items: center; gap: 5px; padding: 2px 10px; border-radius: 99px; font-size: 11px; font-weight: 600; }
+    .badge-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+    .badge-duration { background: rgba(245,158,11,0.13); color: #f59e0b; padding: 2px 10px; border-radius: 99px; font-size: 11px; font-weight: 700; }
+    .card { background: #1a1a1f; border: 1px solid #2a2a35; border-radius: 12px; padding: 16px 20px; cursor: pointer; transition: all 0.15s; margin-bottom: 8px; }
+    .card:hover { border-color: rgba(245,158,11,0.4); background: #22222a; }
+    .input { width: 100%; background: #1a1a1f; border: 1.5px solid #2a2a35; border-radius: 10px; padding: 12px 16px; color: #f0f0f5; font-size: 14px; outline: none; transition: border-color 0.15s; font-family: inherit; }
+    .input:focus { border-color: #f59e0b; } .input.error-border { border-color: #f87171; }
+    label { color: #8888a0; font-size: 12px; font-weight: 600; display: block; margin-bottom: 6px; letter-spacing: 0.04em; }
+    .field-error { color: #f87171; font-size: 12px; margin-top: 4px; display: none; }
+    .api-error { background: rgba(248,113,113,0.13); border: 1px solid rgba(248,113,113,0.27); border-radius: 8px; padding: 10px 14px; margin-bottom: 20px; color: #f87171; font-size: 13px; display: none; }
+    .hint { background: rgba(245,158,11,0.13); border: 1px solid rgba(245,158,11,0.27); border-radius: 8px; padding: 8px 12px; margin-bottom: 20px; color: #f59e0b; font-size: 12px; }
+    .btn-primary { width: 100%; background: #f59e0b; color: #000; border: none; border-radius: 10px; padding: 13px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
+    .btn-primary:disabled { background: #2a2a35; color: #55556a; cursor: not-allowed; }
+    .btn-back { background: none; border: none; color: #8888a0; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 6px; font-family: inherit; padding: 0 0 20px; }
+    .btn-back:hover { color: #f0f0f5; }
+    .state-btns { display: flex; align-items: center; gap: 6px; }
+    .state-btn { background: none; border: 1px solid #2a2a35; color: #8888a0; border-radius: 6px; padding: 3px 8px; font-size: 11px; cursor: pointer; font-family: inherit; }
+    .state-btn.active { background: rgba(245,158,11,0.13); border-color: #f59e0b; color: #f59e0b; }
+    .empty-state { text-align: center; padding: 60px 24px; }
+    .empty-icon { font-size: 48px; margin-bottom: 16px; }
+    .empty-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .empty-desc { color: #8888a0; font-size: 14px; margin-bottom: 24px; }
+    .error-icon-box { width: 64px; height: 64px; background: rgba(248,113,113,0.13); border: 1px solid rgba(248,113,113,0.27); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 20px; }
+    .btn-amber { background: rgba(245,158,11,0.13); border: 1px solid rgba(245,158,11,0.27); color: #f59e0b; border-radius: 10px; padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+    .btn-red { background: rgba(248,113,113,0.13); border: 1px solid rgba(248,113,113,0.27); color: #f87171; border-radius: 10px; padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+    .pagination { display: flex; justify-content: center; gap: 6px; margin-top: 24px; }
+    .page-btn { background: #1a1a1f; border: 1px solid #2a2a35; color: #f0f0f5; border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 13px; font-family: inherit; }
+    .page-btn.active { background: #f59e0b; border-color: #f59e0b; color: #000; font-weight: 700; }
+    .page-btn:disabled { color: #55556a; cursor: not-allowed; }
+    .container { max-width: 760px; margin: 0 auto; padding: 28px 24px; }
+    .container-sm { max-width: 680px; margin: 0 auto; padding: 28px 24px; }
+    .page-title { font-size: 22px; font-weight: 800; margin-bottom: 4px; letter-spacing: -0.03em; }
+    .page-sub { color: #8888a0; font-size: 13px; margin-bottom: 24px; }
+    .dim { color: #55556a; font-size: 12px; } .muted { color: #8888a0; }
+    .flex-between { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .flex-row { display: flex; align-items: center; gap: 8px; }
+    .filter-bar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    .search-wrap { position: relative; flex: 1; min-width: 200px; }
+    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #55556a; pointer-events: none; }
+    .search-input { width: 100%; background: #1a1a1f; border: 1px solid #2a2a35; border-radius: 10px; padding: 10px 12px 10px 36px; color: #f0f0f5; font-size: 13px; outline: none; font-family: inherit; }
+    select { background: #1a1a1f; border: 1px solid #2a2a35; border-radius: 10px; padding: 10px 12px; color: #8888a0; font-size: 13px; outline: none; cursor: pointer; font-family: inherit; }
+    .detail-card { background: #1a1a1f; border: 1px solid #2a2a35; border-radius: 16px; overflow: hidden; }
+    .detail-header { padding: 28px 28px 24px; border-bottom: 1px solid #2a2a35; }
+    .detail-body { padding: 24px 28px; }
+    .detail-footer { padding: 16px 28px; border-top: 1px solid #2a2a35; display: flex; justify-content: space-between; align-items: center; }
+    .meta-row { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 16px; }
+    .meta-item { display: flex; align-items: center; gap: 6px; }
+    .states-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .state-card { background: #1a1a1f; border: 1px solid #2a2a35; border-radius: 12px; overflow: hidden; }
+    .state-card-label { padding: 10px 16px; border-bottom: 1px solid #2a2a35; background: #15151a; color: #8888a0; font-size: 11px; font-weight: 600; }
+    .login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .login-inner { width: 100%; max-width: 400px; }
+    .login-logo { text-align: center; margin-bottom: 40px; }
+    .login-card { background: #1a1a1f; border: 1px solid #2a2a35; border-radius: 16px; padding: 32px; }
+    .mb-16 { margin-bottom: 16px; } .mb-24 { margin-bottom: 24px; }
+    .pass-wrap { position: relative; }
+    .pass-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #8888a0; font-size: 16px; }
+    .count-text { color: #8888a0; font-size: 12px; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+
+<div class="nav">
+  <button class="active" onclick="showScreen('login')">① ログイン</button>
+  <button onclick="showScreen('list')">② 一覧</button>
+  <button onclick="showScreen('detail')">③ 詳細</button>
+  <button onclick="showScreen('states')">④ 空/エラー</button>
+</div>
+
+<!-- ログイン -->
+<div id="screen-login" class="screen active">
+  <div class="login-wrap"><div class="login-inner">
+    <div class="login-logo">
+      <div style="display:inline-flex;align-items:center;gap:10px;margin-bottom:8px">
+        <div style="width:36px;height:36px;background:#f59e0b;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px">&#128214;</div>
+        <span style="font-size:22px;font-weight:800;letter-spacing:-0.03em">StudyLog</span>
+      </div>
+      <p style="color:#8888a0;font-size:13px">学習の記録を、続ける力に。</p>
+    </div>
+    <div class="login-card">
+      <h2 style="font-size:18px;font-weight:700;margin-bottom:24px">ログイン</h2>
+      <div id="login-api-error" class="api-error"></div>
+      <div class="hint">&#128161; demo: study@example.com / password123</div>
+      <div class="mb-16">
+        <label>メールアドレス</label>
+        <input id="login-email" class="input" type="text" placeholder="study@example.com">
+        <div id="email-error" class="field-error"></div>
+      </div>
+      <div class="mb-24">
+        <label>パスワード</label>
+        <div class="pass-wrap">
+          <input id="login-password" class="input" type="password" placeholder="8文字以上" style="padding-right:44px">
+          <button class="pass-toggle" onclick="togglePass()">&#128065;</button>
+        </div>
+        <div id="password-error" class="field-error"></div>
+      </div>
+      <button id="login-btn" class="btn-primary" onclick="handleLogin()">ログイン</button>
+    </div>
+  </div></div>
+</div>
+
+<!-- 一覧 -->
+<div id="screen-list" class="screen">
+  <header>
+    <div class="logo"><div class="logo-icon">&#128214;</div><span class="logo-text">StudyLog</span></div>
+    <div class="state-btns">
+      <span class="dim">㒒0㄃4⤶6⒐7：</span>
+      <button class="state-btn active" onclick="setListState('data',this)">データ</button>
+      <button class="state-btn" onclick="setListState('empty',this)">空</button>
+      <button class="state-btn" onclick="setListState('error',this)">エラー</button>
+    </div>
+  </header>
+  <div class="container">
+    <h1 class="page-title">学習ログ</h1>
+    <p class="page-sub">記録した学習を振り返る</p>
+    <div class="filter-bar">
+      <div class="search-wrap">
+        <span class="search-icon">&#128269;</span>
+        <input id="search-input" class="search-input" placeholder="科目名・メモで検索..." oninput="currentPage=1;renderList()">
+      </div>
+      <select id="subject-filter" onchange="currentPage=1;renderList()">
+        <option value="all">すべての科目</option>
+        <option>React</option><option>英語</option><option>アルゴリズム</option>
+        <option>SQL</option><option>TypeScript</option><option>CSS</option>
+      </select>
+    </div>
+    <div id="list-content"></div>
+    <div id="pagination" class="pagination"></div>
+  </div>
+</div>
+
+<!-- 詳細 -->
+<div id="screen-detail" class="screen">
+  <header>
+    <div class="logo"><div class="logo-icon">&#128214;</div><span class="logo-text">StudyLog</span></div>
+    <div class="state-btns">
+      <span class="dim">㒒0㄃4⤶6⒐7：</span>
+      <button class="state-btn active" onclick="setDetailState('data',this)">データ</button>
+      <button class="state-btn" onclick="setDetailState('not_found',this)">404</button>
+      <button class="state-btn" onclick="setDetailState('server_error',this)">500</button>
+    </div>
+  </header>
+  <div class="container-sm">
+    <button class="btn-back" onclick="showScreen('list')">&#8592; 一覧に戻る</button>
+    <div id="detail-content"></div>
+  </div>
+</div>
+
+<!-- 空/エラー状態 -->
+<div id="screen-states" class="screen">
+  <header>
+    <div class="logo"><div class="logo-icon">&#128214;</div><span class="logo-text">StudyLog</span></div>
+  </header>
+  <div class="container">
+    <h1 class="page-title">④ エラー / 空状態</h1>
+    <p class="page-sub">一覧・詳細で使い回す共通コンポーネントの確認</p>
+    <div class="states-grid">
+      <div class="state-card"><div class="state-card-label">空状態（検索結果なし）</div><div class="empty-state"><div class="empty-icon">&#128269;</div><div class="empty-title">ログが見つかりません</div><div class="empty-desc">別のキーワードや科目でお試しください</div><button class="btn-amber">条件をクリア</button></div></div>
+      <div class="state-card"><div class="state-card-label">空状態（初回・記録なし）</div><div class="empty-state"><div class="empty-icon">&#128211;</div><div class="empty-title">まだ学習ログがありません</div><div class="empty-desc">最初の学習を記録してみましょう</div></div></div>
+      <div class="state-card"><div class="state-card-label">エラー状態（500）</div><div class="empty-state"><div class="error-icon-box">&#9889;</div><div class="empty-title">データを取得できませんでした</div><div class="empty-desc">しばらく待ってから再試行してください</div><button class="btn-red">再試行</button></div></div>
+      <div class="state-card"><div class="state-card-label">エラー状態（404）</div><div class="empty-state"><div class="error-icon-box">&#128194;</div><div class="empty-title">ログが見つかりません</div><div class="empty-desc">URLが正しいか確認してください</div><button class="btn-red">一覧に戻る</button></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const mockLogs = [
+  { id:"1", subject:"React", duration:90, memo:"useEffect の依存配列の挙動を確認。カスタムフックを使ったデータ取得パターンを実装した。", studiedAt:"2025-06-10T20:00:00", createdAt:"2025-06-10" },
+  { id:"2", subject:"英語", duration:30, memo:"単語帳アプリで50問。リスニング練習ば15分実施した。", studiedAt:"2025-06-09T19:30:00", createdAt:"2025-06-09" },
+  { id:"3", subject:"アルゴリズム", duration:60, memo:"二分探索を TypeScript で実装。計算量の復習もあわせて行った。", studiedAt:"2025-06-08T21:00:00", createdAt:"2025-06-08" },
+  { id:"4", subject:"SQL", duration:45, memo:"JOIN 句の種類と使い分けを整理。INNER / LEFT / RIGHT の違いを確認。", studiedAt:"2025-06-07T18:00:00", createdAt:"2025-06-07" },
+  { id:"5", subject:"TypeScript", duration:75, memo:"Generics の基本構文を学習。ユーティリティ型（Partial, Pick）を実際のコードで試した。", studiedAt:"2025-06-06T20:30:00", createdAt:"2025-06-06" },
+];
+const subjectColors = {
+  React: { bg:"rgba(96,165,250,0.13)", color:"#60a5fa" },
+  "英語": { bg:"rgba(244,114,182,0.13)", color:"#f472b6" },
+  "アルゴリズム": { bg:"rgba(167,139,250,0.13)", color:"#a78bfa" },
+  SQL: { bg:"rgba(52,211,153,0.13)", color:"#34d399" },
+  TypeScript: { bg:"rgba(96,165,250,0.13)", color:"#60a5fa" },
+  CSS: { bg:"rgba(251,146,60,0.13)", color:"#fb923c" },
+};
+let currentPage=1, listState="data", detailState="data", selectedLog=mockLogs[0];
+const PS=3;
+function fmt(m){if(m<60)return m+"分";const h=Math.floor(m/60),r=m%60;return r?h+"時間"+r+"分":h+"時間";}
+function fmtDate(s){const d=new Date(s);return d.getFullYear()+"/"+String(d.getMonth()+1).padStart(2,"0")+"/"+String(d.getDate()).padStart(2,"0");}
+function badge(sub,sz){const c=subjectColors[sub]||{bg:"rgba(136,136,160,0.13)",color:"#8888a0"};const fs=sz==="md"?"13px":"11px",pd=sz==="md"?"4px 14px":"2px 10px";return`<span class="badge" style="background:${c.bg};color:${c.color};font-size:${fs};padding:${pd}"><span class="badge-dot" style="background:${c.color}"></span>${sub}</span>`;}
+function showScreen(n){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById("screen-"+n).classList.add("active");
+  document.querySelectorAll(".nav button").forEach((b,i)=>b.classList.toggle("active",["login","list","detail","states"][i]===n));
+  if(n==="list")renderList();
+  if(n==="detail")renderDetail();
+}
+let sp=false;
+function togglePass(){sp=!sp;document.getElementById("login-password").type=sp?"text":"password";document.querySelector(".pass-toggle").textContent=sp?"&#128584;":"&#128065;";}
+function handleLogin(){
+  const em=document.getElementById("login-email").value,pw=document.getElementById("login-password").value;
+  const ee=document.getElementById("email-error"),pe=document.getElementById("password-error"),ae=document.getElementById("login-api-error"),btn=document.getElementById("login-btn");
+  [ee,pe,ae].forEach(e=>{e.style.display="none";e.textContent="";});
+  document.getElementById("login-email").classList.remove("error-border");
+  document.getElementById("login-password").classList.remove("error-border");
+  let ok=true;
+  if(!em){ee.textContent="⚠ メールアドレスを入力してください";ee.style.display="block";document.getElementById("login-email").classList.add("error-border");ok=false;}
+  else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){ee.textContent="⚠ 正しいメールアドレスを入力してください";ee.style.display="block";document.getElementById("login-email").classList.add("error-border");ok=false;}
+  if(!pw){pe.textContent="⚠ パスワードを入力してください";pe.style.display="block";document.getElementById("login-password").classList.add("error-border");ok=false;}
+  else if(pw.length<8){pe.textContent="⚠ パスワードは8文字以上で入力してください";pe.style.display="block";document.getElementById("login-password").classList.add("error-border");ok=false;}
+  if(!ok)return;
+  btn.disabled=true;btn.textContent="ログイン中...";
+  setTimeout(()=>{
+    btn.disabled=false;btn.textContent="ログイン";
+    if(em==="study@example.com"&&pw==="password123")showScreen("list");
+    else{ae.textContent="⚠ メールアドレスまたはパスワードが正しくありません";ae.style.display="block";}
+  },1000);
+}
+function setListState(s,btn){listState=s;document.querySelectorAll("#screen-list .state-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");renderList();}
+function renderList(){
+  const c=document.getElementById("list-content"),p=document.getElementById("pagination");
+  if(listState==="error"){c.innerHTML=`<div class="empty-state"><div class="error-icon-box">&#9889;</div><div class="empty-title">データを取得できませんでした</div><div class="empty-desc">しばらく待ってから再試行</div><button class="btn-red" onclick="setListState('data',document.querySelector('#screen-list .state-btn'))">再試行</button></div>`;p.innerHTML="";return;}
+  if(listState==="empty"){c.innerHTML=`<div class="empty-state"><div class="empty-icon">&#128211;</div><div class="empty-title">まだ学習ログがありません</div><div class="empty-desc">最初の学習を記録してみましょう</div></div>`;p.innerHTML="";return;}
+  const q=document.getElementById("search-input").value,sf=document.getElementById("subject-filter").value;
+  let f=mockLogs.filter(l=>(sf==="all"||l.subject===sf)&&(q===""||l.subject.includes(q)||l.memo.includes(q)));
+  if(f.length===0){c.innerHTML=`<div class="empty-state"><div class="empty-icon">&#128269;</div><div class="empty-title">ログが見つかりません</div><div class="empty-desc">別のキーワードや科目でお試しください</div><button class="btn-amber" onclick="document.getElementById('search-input').value='';document.getElementById('subject-filter').value='all';renderList()">条件をクリア</button></div>`;p.innerHTML="";return;}
+  const tp=Math.ceil(f.length/PS);if(currentPage>tp)currentPage=1;
+  const items=f.slice((currentPage-1)*PS,currentPage*PS);
+  c.innerHTML=`<p class="count-text">${f.length}件の学習ログ</p>`+items.map(l=>`<div class="card" onclick="selectLog('${l.id}')"><div class="flex-between"><div class="flex-row">${badge(l.subject)} <span class="badge-duration">${fmt(l.duration)}</span></div><span class="dim">${fmtDate(l.studiedAt)}</span></div><p class="muted" style="font-size:13px;line-height:1.6;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">${l.memo}</p></div>`).join("");
+  if(tp>1){p.innerHTML=`<button class="page-btn" onclick="changePage(${currentPage-1})" ${currentPage===1?"disabled":""}>&#8592;</button>`+Array.from({length:tp},(_,i)=>`<button class="page-btn ${i+1===currentPage?"active":""}" onclick="changePage(${i+1})">${i+1}</button>`).join("")+`<button class="page-btn" onclick="changePage(${currentPage+1})" ${currentPage===tp?"disabled":""}>&#8594;</button>`;}else p.innerHTML="";}
+function changePage(p){currentPage=p;renderList();}
+function selectLog(id){selectedLog=mockLogs.find(l=>l.id===id);showScreen("detail");}
+function setDetailState(s,btn){detailState=s;document.querySelectorAll("#screen-detail .state-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");renderDetail();}
+function renderDetail(){
+  const c=document.getElementById("detail-content");
+  if(detailState==="not_found"){c.innerHTML=`<div class="empty-state"><div class="error-icon-box">&#128194;</div><div class="empty-title">ログが見つかりません</div><div class="empty-desc">URLが正しいか確認してください</div><button class="btn-red" onclick="showScreen('list')">一覧に戻る</button></div>`;return;}
+  if(detailState==="server_error"){c.innerHTML=`<div class="empty-state"><div class="error-icon-box">&#9889;</div><div class="empty-title">データを取得できませんでした</div><div class="empty-desc">しばらく待ってから再試行してください</div><button class="btn-red" onclick="setDetailState('data',document.querySelector('#screen-detail .state-btn'))">再試行</button></div>`;return;}
+  const l=selectedLog;
+  c.innerHTML=`<div class="detail-card"><div class="detail-header"><div class="flex-between">${badge(l.subject,"md")}<span class="dim">${fmtDate(l.studiedAt)}</span></div><h1 style="font-size:26px;font-weight:800;line-height:1.3;margin-top:8px">${l.subject} の学習記録</h1><div class="meta-row"><div class="meta-item"><span class="dim">&#9201; 学習時間</span><span class="badge-duration">${fmt(l.duration)}</span></div><div class="meta-item"><span class="dim">&#128197; 学習日</span><span class="muted" style="font-size:13px">${fmtDate(l.studiedAt)}</span></div></div></div><div class="detail-body"><p style="color:#8888a0;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px">学習メモ</p><p style="font-size:15px;line-height:1.85;white-space:pre-wrap">${l.memo}</p></div><div class="detail-footer"><span class="dim">記録日: ${fmtDate(l.createdAt)}</span><button style="background:rgba(245,158,11,0.13);border:1px solid rgba(245,158,11,0.27);color:#f59e0b;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer">✏ 編集（将来）</button></div></div>`;
+}
+renderList();renderDetail();
+</script>
+</body>
+</html>
