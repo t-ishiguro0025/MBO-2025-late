@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "@vitest/browser-playwright": "^4.0.18",
+    "jsdom": "^28.1.0",
     "vite-tsconfig-paths": "^6.1.1"
   }
 }
