@@ -9,7 +9,7 @@ AI の出力した下記設計をもとに、AIを使わずに実装・学習を
 > 3. 実装 → 差分整理 → レビュー依頼
 
 ---
-## 実装想定デザイン
+## ざっくり実装想定デザイン共有
 [studylog-design-preview.html](https://github.com/t-ishiguro0025/MBO-2025-early/blob/develop/studylog-design-preview.html) がデザイン
 
 - ログイン画面
