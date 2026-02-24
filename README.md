@@ -9,6 +9,22 @@ AI の出力した下記設計をもとに、AIを使わずに実装・学習を
 > 3. 実装 → 差分整理 → レビュー依頼
 
 ---
+## 実装想定デザイン
+[studylog-design-preview.html](https://github.com/t-ishiguro0025/MBO-2025-early/blob/develop/studylog-design-preview.html) がデザイン
+
+- ログイン画面
+<img width="843" height="676" alt="スクリーンショット 2026-02-24 21 15 01" src="https://github.com/user-attachments/assets/9fc33a0a-4db1-42ba-94b4-f1275167694e" />
+
+- 一覧画面
+<img width="843" height="676" alt="スクリーンショット 2026-02-24 21 15 04" src="https://github.com/user-attachments/assets/49ffb04c-3e9b-4311-a507-37f307a2a081" />
+
+- 詳細画面
+<img width="843" height="676" alt="スクリーンショット 2026-02-24 21 15 07" src="https://github.com/user-attachments/assets/b38621ca-5ef4-4983-802d-e28d0230576c" />
+
+- 空/エラー画面
+<img width="382" height="476" alt="スクリーンショット 2026-02-24 21 16 29" src="https://github.com/user-attachments/assets/f76e7605-e7b3-49c0-a30e-57b8335cd8d3" />
+
+
 
 ## 共通前提
 
