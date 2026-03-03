@@ -8,14 +8,19 @@ async function prepare() {
     await worker.start({ onUnhandledRequest: 'bypass' });
   }
 }
-
-prepare().then(() => {
-  startTransition(() => {
-    hydrateRoot(
-      document,
-      <StrictMode>
-        <HydratedRouter />
-      </StrictMode>
-    );
+prepare()
+  .catch((error) => {
+    if (import.meta.env.DEV) {
+      console.error('Failed to start MSW worker. Continuing without mocks.', error);
+    }
+  })
+  .then(() => {
+    startTransition(() => {
+      hydrateRoot(
+        document,
+        <StrictMode>
+          <HydratedRouter />
+        </StrictMode>
+      );
+    });
   });
-});

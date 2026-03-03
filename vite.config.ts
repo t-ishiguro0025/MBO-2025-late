@@ -11,8 +11,8 @@ export default defineConfig((config) => ({
     // devcert(),
     sentryReactRouter(
       {
-        org: 't.ishiguro',
-        project: 'MBO-2025-early',
+        org: process.env.SENTRY_ORG ?? "t.ishiguro",
+        project: process.env.SENTRY_PROJECT ?? "MBO-2025-early",
         authToken: process.env.SENTRY_AUTH_TOKEN,
         telemetry: false,
       },
@@ -27,5 +27,5 @@ export default defineConfig((config) => ({
    * 例: BASE_URL=/line/neurodiversity/
    * @see https://ja.vite.dev/guide/build#public-base-path
    */
-  base: process.env.BASE_URL || '/',
+  base: process.env.BASE_URL || "/",
 }));
