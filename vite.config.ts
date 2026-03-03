@@ -2,13 +2,11 @@ import { reactRouter } from '@react-router/dev/vite';
 import { sentryReactRouter } from '@sentry/react-router';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
-// import { devcert } from './vitePlugins/devcert';
 
 export default defineConfig((config) => ({
   plugins: [
     reactRouter(),
     tsconfigPaths(),
-    // devcert(),
     sentryReactRouter(
       {
         org: process.env.SENTRY_ORG ?? "t.ishiguro",
