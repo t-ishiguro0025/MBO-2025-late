@@ -2,17 +2,17 @@ import { reactRouter } from '@react-router/dev/vite';
 import { sentryReactRouter } from '@sentry/react-router';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import { devcert } from './vitePlugins/devcert';
+// import { devcert } from './vitePlugins/devcert';
 
 export default defineConfig((config) => ({
   plugins: [
     reactRouter(),
     tsconfigPaths(),
-    devcert(),
+    // devcert(),
     sentryReactRouter(
       {
-        org: 'sonicmoov',
-        project: 'comsbi-trp-neurodiversity',
+        org: 't.ishiguro',
+        project: 'MBO-2025-early',
         authToken: process.env.SENTRY_AUTH_TOKEN,
         telemetry: false,
       },
