@@ -1,12 +1,15 @@
 import "@mantine/core/styles.css";
-
 import { MantineProvider as BaseMantineProvider } from "@mantine/core";
-import type { ReactNode } from "react";
+import { theme } from "@/shared/libs/mantine";
 
 type Props = {
-  children: ReactNode;
+  children: React.ReactNode;
 };
 
 export function MantineProvider({ children }: Props) {
-  return <BaseMantineProvider>{children}</BaseMantineProvider>;
+  return (
+    <BaseMantineProvider theme={theme} forceColorScheme="dark">
+      {children}
+    </BaseMantineProvider>
+  );
 }
