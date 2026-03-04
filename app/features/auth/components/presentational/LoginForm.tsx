@@ -12,7 +12,7 @@ interface LoginFormProps {
   formValue: LoginFormData;
   isLoading: boolean;
   apiError?: string;
-  fieldErrors: Record<string, string>;
+  fieldErrors: Partial<Record<keyof LoginFormData, string>>;
   onEmailChange: (event: ChangeEvent<HTMLInputElement>) => void;
   onPasswordChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
