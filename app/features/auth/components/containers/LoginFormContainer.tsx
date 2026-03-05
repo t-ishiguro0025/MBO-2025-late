@@ -20,7 +20,6 @@ export function LoginFormContainer() {
     setPassword(event.target.value);
   };
   const onSubmit = async () => {
-    console.log("onSubmit called");
     const result = loginSchema.safeParse({ email, password });
     if (!result.success) {
       const errors: Record<string, string> = {};
