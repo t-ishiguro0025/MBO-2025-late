@@ -1,6 +1,13 @@
 {
+  "outputDirectory": "build/client",
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ],
-  "outputDirectory": "build/client"
+    {
+      "source": "/mockServiceWorker.js",
+      "destination": "/mockServiceWorker.js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
